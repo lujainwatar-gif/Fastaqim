@@ -1,5 +1,5 @@
 // غيّري رقم النسخة هذا فقط (v1 → v2 → v3 ...) كل مرة ترفعين فيها تعديلاً جديداً
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CACHE_NAME = `alsirat-cache-${CACHE_VERSION}`;
 
 self.addEventListener('install', () => {
