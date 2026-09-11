@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>الصراط المستقيم — تجربة تفاعلية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#05070b;
+    --path:#ffffff;
+    --path-light:#e2e8f0;
+    --gold:#c9974a;
+    --gold-bright:#f3d38a;
+    --fire-core:#3d0d07;
+    --fire-mid:#c23b1a;
+    --fire-tip:#f5a742;
+    --flower-green:#3f5c3a;
+    --fitrah:#f7f3ea;
+    --muted:#7c8494;
+    --wall:#232a36;
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color: transparent;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--void);
+    color:var(--fitrah);
+    font-family:'Tajawal', sans-serif;
+    overflow-x:hidden;
+  }
+
+  section{
+    min-height:100vh;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    padding:8vh 6vw;
+    text-align:center;
+  }
+
+  .progress{
+    position:fixed;
+    top:14px; left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    flex-direction:row;
+    gap:10px;
+    z-index:50;
+  }
+  .progress span{
+    width:7px; height:7px;
+    border-radius:50%;
+    background:var(--wall);
+    transition:background .4s, transform .4s;
+  }
+  .progress span.active{
+    background:var(--gold-bright);
+    transform:scale(1.4);
+  }
+  .sound-toggle{
+    position:fixed;
+    top:12px; right:14px;
+    z-index:50;
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--wall);
+    color:var(--muted);
+    font-family:'Tajawal', sans-serif;
+    font-size:.72rem;
+    padding:7px 12px;
+    border-radius:20px;
+    cursor:pointer;
+    backdrop-filter:blur(4px);
+    outline: none;
+  }
+
+  /* ===== Section 1 : التيه ===== */
+  #s1{background:radial-gradient(ellipse at 50% 70%, #0a0d13 0%, var(--void) 42%);}
+  .spark{
+    width:6px; height:6px;
+    border-radius:50%;
+    background:var(--gold-bright);
+    box-shadow:0 0 20px 6px rgba(243,211,138,.5);
+    margin-bottom:40px;
+    animation:flicker 3.5s ease-in-out infinite;
+  }
+  @keyframes flicker{
+    0%,100%{opacity:.4; transform:scale(1);}
+    50%{opacity:1; transform:scale(1.6);}
+  }
+  #s1 h1{
+    font-size:clamp(1.6rem, 5vw, 2.6rem);
+    font-weight:400;
+    line-height:1.9;
+    color:var(--muted);
+    max-width:680px;
+  }
+  #s1 .whisper{margin-top:36px; font-size:1rem; color:var(--gold); opacity:.75;}
+  .scroll-cue{
+    margin-top:60px; font-size:.85rem; color:var(--muted);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    animation:bob 2s ease-in-out infinite;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0);} 50%{transform:translateY(8px);}}
+  .scroll-cue svg{width:20px; opacity:.6;}
+
+  /* ===== Section 2 : الصراط الأبيض والأبواب المنظورية ===== */
+  #s2{background:var(--void);}
+  .caller-line{
+    font-family:'Aref Ruqaa', serif;
+    font-size:clamp(1.3rem, 4.2vw, 2.1rem);
+    color:var(--gold);
+    line-height:2;
+    max-width:640px;
+    text-shadow:0 0 30px rgba(201,151,74,.25);
+    margin-bottom:34px;
+    cursor:pointer;
+    transition:transform 0.2s;
+  }
+  .caller-line:hover{transform:scale(1.02);}
+  .scene-wrap{
+    width:100%;
+    max-width:460px;
+    position:relative;
+    cursor:pointer;
+    outline: none;
+  }
+  .scene-wrap svg.scene-svg{width:100%; height:auto; display:block;}
+  .corridor-svg{width:100%; aspect-ratio:4/5; display:block; border-radius:10px; background:var(--void);}
+  .floor-glow{animation:floorPulse 3.6s ease-in-out infinite;}
+  .floor-glow-blur{animation:floorPulse 3.6s ease-in-out infinite; opacity:.45;}
+  @keyframes floorPulse{0%,100%{opacity:.8;} 50%{opacity:1;}}
+  .orb-hotspot{
+    position:absolute;
+    left:50%; top:83%;
+    width:20%; aspect-ratio:1;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+  }
+  .light-dot{
+    display:block;
+    width:14px; height:14px;
+    border-radius:50%;
+    background:var(--gold-bright);
+    box-shadow:0 0 14px 4px rgba(243,211,138,.75), 0 0 34px 14px rgba(243,211,138,.35);
+    animation:flicker 3.2s ease-in-out infinite;
+  }
+  .orb-hotspot .light-dot{
+    position:absolute; left:50%; top:50%;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+  }
+  .orb-above{
+    position:absolute;
+    left:50%; top:15%;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+  }
+  .book-glow{
+    position:absolute; left:50%; top:69%;
+    width:56%; aspect-ratio:1;
+    transform:translate(-50%,-50%) scale(0);
+    opacity:0;
+    transition:transform .7s cubic-bezier(.2,.9,.3,1.2), opacity .5s;
+    pointer-events:none;
+  }
+  .scene-wrap.revealed .book-glow{transform:translate(-50%,-50%) scale(1); opacity:1;}
+  .caption-small{
+    margin-top:16px; font-size:.82rem; color:var(--muted);
+    max-width:460px; line-height:1.8;
+  }
+  .reveal-text0{
+    margin-top:22px; max-width:520px; min-height:70px;
+    font-family:'Aref Ruqaa', serif;
+    font-size:clamp(1.1rem, 3.2vw, 1.4rem);
+    color:var(--gold); line-height:2;
+    opacity:0; transition:opacity .7s;
+  }
+  .reveal-text0.show{opacity:1;}
+  .tap-hint{margin-top:14px; font-size:.78rem; color:var(--muted); opacity:.7;}
+
+  /* ===== Section 3 : الأبواب التفاعلية ===== */
+  #s3{background:linear-gradient(180deg, var(--void) 0%, #0e131d 100%);}
+  #s3 .intro-text{font-size:1rem; color:var(--muted); max-width:520px; line-height:2.1; margin-bottom:40px;}
+  .doors-row{display:flex; gap:20px; justify-content:center; flex-wrap:wrap; max-width:600px;}
+  .door{
+    width:118px; height:200px;
+    border-radius:8px;
+    position:relative; overflow:hidden; cursor:pointer;
+    border:2px solid var(--wall);
+    background:var(--flower-green);
+    transition:transform .25s;
+  }
+  .door:active{transform:scale(.96);}
+  .door svg.flowers{position:absolute; inset:0; width:100%; height:100%;}
+  .door .veil{
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(90deg, rgba(20,15,10,.35) 0 5px, rgba(30,22,15,.15) 5px 10px);
+    transition:opacity .5s;
+  }
+  .door.opened .veil{opacity:0;}
+  .door.opened svg.flowers{opacity:0;}
+  .door.opened{
+    background:linear-gradient(180deg, var(--fire-tip) 0%, var(--fire-mid) 45%, var(--fire-core) 100%);
+    animation:doorGlow 1.2s ease-in-out infinite;
+  }
+  @keyframes doorGlow{
+    0%,100%{box-shadow:inset 0 0 40px 6px rgba(245,167,66,.35);}
+    50%{box-shadow:inset 0 0 60px 14px rgba(245,167,66,.6);}
+  }
+  .flame-layer{
+    position:absolute; inset:0;
+    opacity:0;
+    transition:opacity .35s;
+  }
+  .door.opened .flame-layer{opacity:1;}
+  .flame{position:absolute; bottom:0; left:50%; transform-origin:bottom center;}
+  .flame-core{
+    width:100px; height:170px; margin-left:-50px;
+    background:radial-gradient(ellipse at 50% 100%, var(--fire-tip) 0%, var(--fire-mid) 45%, var(--fire-core) 85%);
+    border-radius:50% 50% 45% 45%/60% 60% 40% 40%;
+    animation:flameA 1.1s ease-in-out infinite;
+  }
+  .flame-mid{
+    width:64px; height:130px; margin-left:-32px;
+    background:radial-gradient(ellipse at 50% 100%, #ffdca0 0%, var(--fire-tip) 50%, var(--fire-mid) 90%);
+    border-radius:50% 50% 45% 45%/65% 65% 35% 35%;
+    animation:flameB 0.85s ease-in-out infinite;
+  }
+  @keyframes flameA{
+    0%,100%{transform:scaleY(1) skewX(0deg);}
+    30%{transform:scaleY(1.08) skewX(-3deg);}
+    60%{transform:scaleY(.94) skewX(3deg);}
+  }
+  @keyframes flameB{
+    0%,100%{transform:scaleY(1) skewX(0deg);}
+    40%{transform:scaleY(1.15) skewX(4deg);}
+    70%{transform:scaleY(.9) skewX(-4deg);}
+  }
+  .ember{
+    position:absolute; bottom:20px; width:4px; height:4px; border-radius:50%;
+    background:var(--fire-tip);
+    animation:rise 1.8s ease-in infinite;
+    opacity:0;
+  }
+  .door.opened .ember{opacity:1;}
+  .ember:nth-child(1){left:35%; animation-delay:0s;}
+  .ember:nth-child(2){left:55%; animation-delay:.5s;}
+  .ember:nth-child(3){left:45%; animation-delay:1s;}
+  @keyframes rise{
+    0%{transform:translateY(0) scale(1); opacity:.9;}
+    100%{transform:translateY(-140px) scale(.2); opacity:0;}
+  }
+  .door-label{margin-top:14px; font-size:.8rem; color:var(--muted);}
+  .reveal-text{
+    margin-top:36px; max-width:540px; min-height:90px;
+    font-family:'Aref Ruqaa', serif;
+    font-size:clamp(1.15rem, 3.5vw, 1.55rem);
+    color:var(--gold); line-height:2;
+    opacity:0; transition:opacity .6s;
+    cursor:pointer;
+  }
+  .reveal-text.show{opacity:1;}
+
+  /* ===== Section 4 : الداعي الثاني من فوق الصراط ===== */
+  #s4{background:linear-gradient(180deg, #0e131d 0%, #05070b 100%);}
+  #s4 .intro-text{font-size:1rem; color:var(--muted); max-width:540px; line-height:2.1; margin-bottom:46px;}
+  .figure-wrap{
+    width:180px; height:240px; position:relative; cursor:pointer; 
+    display:flex; align-items:center; justify-content:center;
+    outline: none; -webkit-focus-ring-color: transparent;
+  }
+  .figure-wrap svg.figure-svg{width:100%; height:100%; display:block; z-index:2;}
+  .figure-burst{
+    position:absolute;
+    left:50%; top:50%;
+    width:220px; height:220px;
+    border-radius:50%;
+    background:radial-gradient(circle, #ffffff 0%, rgba(247,243,234,0.8) 45%, rgba(243,211,138,0) 70%);
+    opacity:0;
+    transform:translate(-50%,-50%) scale(.5);
+    transition:opacity .8s, transform .8s;
+    pointer-events:none;
+    z-index:1;
+  }
+  .figure-wrap.revealed .figure-burst{opacity:1; transform:translate(-50%,-50%) scale(1);}
+  .figure-wrap svg #figHead, .figure-wrap svg #figBody{
+    fill:#20242e;
+    transition:fill 1s ease, filter 1s ease;
+  }
+  .figure-wrap.revealed svg #figHead, .figure-wrap.revealed svg #figBody{
+    fill:#f7f3ea;
+    filter:drop-shadow(0 0 18px rgba(247,243,234,.9)) drop-shadow(0 0 38px rgba(201,151,74,.65));
+  }
+  .figure-label{margin-top:20px; font-size:.85rem; color:var(--muted);}
+  .reveal-text2{
+    margin-top:32px; max-width:560px; min-height:100px;
+    font-family:'Aref Ruqaa', serif;
+    font-size:clamp(1.1rem, 3.3vw, 1.45rem);
+    color:var(--gold); line-height:2.1;
+    opacity:0; transition:opacity .8s;
+  }
+  .reveal-text2.show{opacity:1;}
+
+  /* ===== Section 5 : المعاني + الحديث ===== */
+  #s5{background:var(--void);}
+  #s5 h2{
+    font-family:'Aref Ruqaa', serif;
+    font-size:clamp(1.5rem, 4vw, 2.1rem);
+    color:var(--gold); margin-bottom:14px;
+  }
+  #s5 .lead{font-size:.9rem; color:var(--muted); max-width:480px; margin-bottom:38px; line-height:1.9;}
+  .map-list{display:flex; flex-direction:column; gap:12px; width:100%; max-width:560px;}
+  .map-item{
+    border:1px solid var(--wall);
+    border-radius:12px;
+    background:rgba(255,255,255,.02);
+    overflow:hidden;
+    text-align:right;
+    cursor:pointer;
+  }
+  .map-item .row{
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    padding:15px 18px;
+    position:relative;
+  }
+  .map-item .term{
+    color:var(--gold); font-weight:700; font-size:.88rem; line-height:1.6;
+    flex:1; overflow-wrap:break-word;
+  }
+  .map-item .plus{
+    color:var(--muted); font-size:1.1rem; transition:transform .3s; flex-shrink:0;
+  }
+  .map-item.open .plus{transform:rotate(45deg);}
+  .map-item .detail{
+    max-height:0; overflow:hidden;
+    transition:max-height .5s ease, padding .4s ease;
+    padding:0 18px;
+    color:var(--muted); font-size:.85rem; line-height:2; text-align:right;
+  }
+  .map-item.open .detail{max-height:320px; padding:0 18px 18px;}
+
+  .finale-cue{margin-top:50px; font-size:.85rem; color:var(--gold); opacity:.85;}
+  .hadith-box{
+    margin-top:24px; max-width:640px; padding:26px;
+    border:1px solid var(--wall); border-radius:14px;
+    background:rgba(255,255,255,.02);
+    opacity:0; transform:translateY(18px);
+    transition:opacity .9s ease, transform .9s ease;
+  }
+  .hadith-box.show{opacity:1; transform:translateY(0);}
+  .hadith-box p{font-family:'Aref Ruqaa', serif; font-size:1.05rem; line-height:2.3; color:var(--fitrah);}
+  .credit{margin-top:10px; font-size:.85rem; color:var(--muted); opacity:.8;}
+  .credit-main{margin-top:40px; font-weight:bold; color:var(--gold);}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress">
+  <span data-i="0" class="active"></span><span data-i="1"></span><span data-i="2"></span><span data-i="3"></span><span data-i="4"></span>
+</div>
+<button class="sound-toggle" id="soundToggle">🔈 الصوت</button>
+<audio id="callerAudio" src="audio/caller-call.mp3" preload="auto"></audio>
+<audio id="doorAudio" src="audio/door-warning.mp3" preload="auto"></audio>
+
+<!-- Section 1: التيه -->
+<section id="s1">
+  <div class="spark"></div>
+  <h1>تمشي وحدك... لا تعرف أين الطريق، ولا أين ينتهي التيه.</h1>
+  <div class="whisper">فجأة، يصلك صوت من بعيد...</div>
+  <div class="scroll-cue">
+    انزل لتكمل الرحلة
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+  </div>
+</section>
+
+<!-- Section 2: الصراط منير بالأبيض والأبواب منظورية 3D متناسقة -->
+<section id="s2">
+  <p class="caller-line" id="callerLine1">"يَا أَيُّهَا النَّاسُ، ادْخُلُوا الصِّرَاطَ جَمِيعًا، وَلَا تَتَعَرَّجُوا"</p>
+
+  <div class="scene-wrap" id="sceneWrap">
+    <svg class="corridor-svg" id="corridorSvg" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="floorGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="#f2f0ea" stop-opacity=".92"/>
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="1"/>
+        </linearGradient>
+        <radialGradient id="nurGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+          <stop offset="30%" stop-color="#ffffff" stop-opacity=".7"/>
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="floorBlur" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="10"/>
+        </filter>
+      </defs>
+
+      <!-- ceiling -->
+      <polygon points="10,60 390,60 225,205 175,205" fill="#10141b"/>
+
+      <!-- walls -->
+      <polygon points="10,460 10,60 175,205 175,235" fill="#1a2029"/>
+      <polygon points="390,460 390,60 225,205 225,235" fill="#1a2029"/>
+
+      <!-- floor: the whole sirat glowing white, no separate center line -->
+      <polygon class="floor-glow-blur" points="10,460 390,460 225,235 175,235" fill="#ffffff" filter="url(#floorBlur)"/>
+      <polygon class="floor-glow" points="10,460 390,460 225,235 175,235" fill="url(#floorGrad)"/>
+
+      <!-- the path's own glow culminating in soft white light at its far end — fully covering the opening between the walls, no hard rectangle left -->
+      <polygon points="175,205 225,205 225,235 175,235" fill="#ffffff" opacity=".95" filter="url(#floorBlur)"/>
+      <circle cx="200" cy="220" r="55" fill="url(#nurGlow)" filter="url(#floorBlur)"/>
+
+      <!-- glowing gold trim along the base of each wall -->
+      <polygon points="10,460 10,442.0 175,233.7 175,235" fill="var(--gold)"/>
+      <polygon points="390,460 390,442.0 225,233.7 225,235" fill="var(--gold)"/>
+
+      <!-- doors with pleated curtains, left wall — drawn open a little, all the way to the end of the walls -->
+      <g class="door-decor">
+        <polygon points="23.2,390.1 23.2,153.1 28.3,155.1 28.3,384.8" fill="#05070b"/>
+        <polygon points="28.3,384.8 28.3,155.1 46.3,162.0 46.3,365.9" fill="#14181f"/>
+        <polygon points="28.3,384.8 28.3,155.1 31.9,156.4 31.9,381.0" fill="#5b3a2e"/>
+        <polygon points="31.9,381.0 31.9,156.4 35.5,157.8 35.5,377.2" fill="#6b4536"/>
+        <polygon points="35.5,377.2 35.5,157.8 39.1,159.2 39.1,373.5" fill="#54332a"/>
+        <polygon points="39.1,373.5 39.1,159.2 42.7,160.6 42.7,369.7" fill="#6b4536"/>
+        <polygon points="42.7,369.7 42.7,160.6 46.3,162.0 46.3,365.9" fill="#5b3a2e"/>
+
+        <polygon points="66.1,345.2 66.1,169.6 70.5,171.3 70.5,340.6" fill="#05070b"/>
+        <polygon points="70.5,340.6 70.5,171.3 85.9,177.3 85.9,324.4" fill="#14181f"/>
+        <polygon points="70.5,340.6 70.5,171.3 73.5,172.5 73.5,337.4" fill="#5b3a2e"/>
+        <polygon points="73.5,337.4 73.5,172.5 76.6,173.7 76.6,334.1" fill="#6b4536"/>
+        <polygon points="76.6,334.1 76.6,173.7 79.7,174.9 79.7,330.9" fill="#54332a"/>
+        <polygon points="79.7,330.9 79.7,174.9 82.8,176.1 82.8,327.7" fill="#6b4536"/>
+        <polygon points="82.8,327.7 82.8,176.1 85.9,177.3 85.9,324.4" fill="#5b3a2e"/>
+
+        <polygon points="102.9,306.6 102.9,183.8 106.6,185.2 106.6,302.7" fill="#05070b"/>
+        <polygon points="106.6,302.7 106.6,185.2 119.8,190.3 119.8,288.9" fill="#14181f"/>
+        <polygon points="106.6,302.7 106.6,185.2 109.3,186.3 109.3,299.9" fill="#5b3a2e"/>
+        <polygon points="109.3,299.9 109.3,186.3 111.9,187.3 111.9,297.2" fill="#6b4536"/>
+        <polygon points="111.9,297.2 111.9,187.3 114.5,188.3 114.5,294.4" fill="#54332a"/>
+        <polygon points="114.5,294.4 114.5,188.3 117.2,189.3 117.2,291.7" fill="#6b4536"/>
+        <polygon points="117.2,291.7 117.2,189.3 119.8,190.3 119.8,288.9" fill="#5b3a2e"/>
+
+        <polygon points="134.4,273.6 134.4,195.9 137.6,197.2 137.6,270.3" fill="#05070b"/>
+        <polygon points="137.6,270.3 137.6,197.2 148.9,201.5 148.9,258.4" fill="#14181f"/>
+        <polygon points="137.6,270.3 137.6,197.2 139.9,198.0 139.9,267.9" fill="#5b3a2e"/>
+        <polygon points="139.9,267.9 139.9,198.0 142.1,198.9 142.1,265.5" fill="#6b4536"/>
+        <polygon points="142.1,265.5 142.1,198.9 144.4,199.8 144.4,263.2" fill="#54332a"/>
+        <polygon points="144.4,263.2 144.4,199.8 146.6,200.7 146.6,260.8" fill="#6b4536"/>
+        <polygon points="146.6,260.8 146.6,200.7 148.9,201.5 148.9,258.4" fill="#5b3a2e"/>
+
+        <polygon points="161.4,245.3 161.4,206.3 164.1,207.4 164.1,242.5" fill="#05070b"/>
+        <polygon points="164.1,242.5 164.1,207.4 173.8,211.1 173.8,232.3" fill="#14181f"/>
+        <polygon points="164.1,242.5 164.1,207.4 166.1,208.1 166.1,240.4" fill="#5b3a2e"/>
+        <polygon points="166.1,240.4 166.1,208.1 168.0,208.9 168.0,238.4" fill="#6b4536"/>
+        <polygon points="168.0,238.4 168.0,208.9 169.9,209.6 169.9,236.4" fill="#54332a"/>
+        <polygon points="169.9,236.4 169.9,209.6 171.9,210.4 171.9,234.4" fill="#6b4536"/>
+        <polygon points="171.9,234.4 171.9,210.4 173.8,211.1 173.8,232.3" fill="#5b3a2e"/>
+      </g>
+
+      <!-- doors with pleated curtains, right wall — mirrored, open a little, to the end of the walls -->
+      <g class="door-decor">
+        <polygon points="376.8,390.1 376.8,153.1 371.7,155.1 371.7,384.8" fill="#05070b"/>
+        <polygon points="371.7,384.8 371.7,155.1 353.7,162.0 353.7,365.9" fill="#14181f"/>
+        <polygon points="371.7,384.8 371.7,155.1 368.1,156.4 368.1,381.0" fill="#5b3a2e"/>
+        <polygon points="368.1,381.0 368.1,156.4 364.5,157.8 364.5,377.2" fill="#6b4536"/>
+        <polygon points="364.5,377.2 364.5,157.8 360.9,159.2 360.9,373.5" fill="#54332a"/>
+        <polygon points="360.9,373.5 360.9,159.2 357.3,160.6 357.3,369.7" fill="#6b4536"/>
+        <polygon points="357.3,369.7 357.3,160.6 353.7,162.0 353.7,365.9" fill="#5b3a2e"/>
+
+        <polygon points="333.9,345.2 333.9,169.6 329.5,171.3 329.5,340.6" fill="#05070b"/>
+        <polygon points="329.5,340.6 329.5,171.3 314.1,177.3 314.1,324.4" fill="#14181f"/>
+        <polygon points="329.5,340.6 329.5,171.3 326.5,172.5 326.5,337.4" fill="#5b3a2e"/>
+        <polygon points="326.5,337.4 326.5,172.5 323.4,173.7 323.4,334.1" fill="#6b4536"/>
+        <polygon points="323.4,334.1 323.4,173.7 320.3,174.9 320.3,330.9" fill="#54332a"/>
+        <polygon points="320.3,330.9 320.3,174.9 317.2,176.1 317.2,327.7" fill="#6b4536"/>
+        <polygon points="317.2,327.7 317.2,176.1 314.1,177.3 314.1,324.4" fill="#5b3a2e"/>
+
+        <polygon points="297.1,306.6 297.1,183.8 293.4,185.2 293.4,302.7" fill="#05070b"/>
+        <polygon points="293.4,302.7 293.4,185.2 280.2,190.3 280.2,288.9" fill="#14181f"/>
+        <polygon points="293.4,302.7 293.4,185.2 290.7,186.3 290.7,299.9" fill="#5b3a2e"/>
+        <polygon points="290.7,299.9 290.7,186.3 288.1,187.3 288.1,297.2" fill="#6b4536"/>
+        <polygon points="288.1,297.2 288.1,187.3 285.5,188.3 285.5,294.4" fill="#54332a"/>
+        <polygon points="285.5,294.4 285.5,188.3 282.8,189.3 282.8,291.7" fill="#6b4536"/>
+        <polygon points="282.8,291.7 282.8,189.3 280.2,190.3 280.2,288.9" fill="#5b3a2e"/>
+
+        <polygon points="265.6,273.6 265.6,195.9 262.4,197.2 262.4,270.3" fill="#05070b"/>
+        <polygon points="262.4,270.3 262.4,197.2 251.1,201.5 251.1,258.4" fill="#14181f"/>
+        <polygon points="262.4,270.3 262.4,197.2 260.1,198.0 260.1,267.9" fill="#5b3a2e"/>
+        <polygon points="260.1,267.9 260.1,198.0 257.9,198.9 257.9,265.5" fill="#6b4536"/>
+        <polygon points="257.9,265.5 257.9,198.9 255.6,199.8 255.6,263.2" fill="#54332a"/>
+        <polygon points="255.6,263.2 255.6,199.8 253.4,200.7 253.4,260.8" fill="#6b4536"/>
+        <polygon points="253.4,260.8 253.4,200.7 251.1,201.5 251.1,258.4" fill="#5b3a2e"/>
+
+        <polygon points="238.6,245.3 238.6,206.3 235.9,207.4 235.9,242.5" fill="#05070b"/>
+        <polygon points="235.9,242.5 235.9,207.4 226.2,211.1 226.2,232.3" fill="#14181f"/>
+        <polygon points="235.9,242.5 235.9,207.4 233.9,208.1 233.9,240.4" fill="#5b3a2e"/>
+        <polygon points="233.9,240.4 233.9,208.1 232.0,208.9 232.0,238.4" fill="#6b4536"/>
+        <polygon points="232.0,238.4 232.0,208.9 230.1,209.6 230.1,236.4" fill="#54332a"/>
+        <polygon points="230.1,236.4 230.1,209.6 228.1,210.4 228.1,234.4" fill="#6b4536"/>
+        <polygon points="228.1,234.4 228.1,210.4 226.2,211.1 226.2,232.3" fill="#5b3a2e"/>
+      </g>
+    </svg>
+
+    <div class="orb-hotspot" id="orbHotspot" title="اضغط لتكتشف من ينادي">
+      <span class="light-dot"></span>
+    </div>
+
+    <div class="orb-above" aria-hidden="true">
+      <span class="light-dot"></span>
+    </div>
+
+    <svg class="book-glow" viewBox="0 0 100 100">
+      <defs>
+        <radialGradient id="bg" cx="50%" cy="50%" r="60%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="60%" stop-color="#f3d38a"/>
+          <stop offset="100%" stop-color="#c9974a" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="50" cy="50" r="48" fill="url(#bg)"/>
+      <g transform="translate(30,38)" fill="#3b2a12" opacity=".85">
+        <path d="M0 6 Q10 0 20 6 L20 30 Q10 24 0 30 Z"/>
+        <path d="M40 6 Q30 0 20 6 L20 30 Q30 24 40 30 Z"/>
+      </g>
+    </svg>
+  </div>
+
+  <p class="tap-hint">اضغط على نقطة النور عند بوابة الطريق التفاعلية</p>
+  <p class="reveal-text0" id="orbText">هذا الداعي الثابت على رأس الصراط... "كِتَابُ اللَّهِ" — نداءٌ لا يتغيّر، من أول الطريق يقول: تعالوا جميعاً، فالنجاة معاً لا فرادى.</p>
+
+  <p class="caption-small">وعلى الجانبين سوران يمتدان كالممر، وفي السورين أبواب مفتوحة عليها ستور مرخاة... وتلك النقطة الخافتة البعيدة في آخر الممر — أليست هي ذاتها الشرارة التي رأيتها في ظلامك الأول؟</p>
+</section>
+
+<!-- Section 3: الأبواب -->
+<section id="s3">
+   <p class="intro-text">من بعيد، تبدو الأبواب المفتوحة حدائق مزهرة تدعوك للدخول. اضغط على أي باب لترى ما وراء الزهور حقاً.</p>
+
+  <div class="doors-row" id="doorsRow">
+    <div class="door" data-door="1">
+         <svg class="flowers" viewBox="0 0 100 170" preserveAspectRatio="xMidYMax slice">
+        <rect width="100" height="170" fill="#3f5c3a"/>
+        <g><circle cx="30" cy="120" r="7" fill="#e8a0bf"/><circle cx="26" cy="115" r="4" fill="#f3d38a"/></g>
+        <g><circle cx="65" cy="140" r="8" fill="#b48ee0"/><circle cx="70" cy="134" r="4" fill="#f3d38a"/></g>
+        <g><circle cx="45" cy="90" r="6" fill="#f3d38a"/></g>
+        <g><circle cx="75" cy="100" r="7" fill="#e8a0bf"/></g>
+        <g stroke="#2b3e28" stroke-width="2"><line x1="30" y1="120" x2="30" y2="160"/><line x1="65" y1="140" x2="65" y2="165"/><line x1="45" y1="90" x2="45" y2="150"/><line x1="75" y1="100" x2="75" y2="155"/></g>
+      </svg>
+      <div class="veil"></div>
+      <div class="flame-layer"><div class="flame flame-core"></div><div class="flame flame-mid"></div><span class="ember"></span><span class="ember"></span><span class="ember"></span></div>
+    </div>
+
+    <div class="door" data-door="2">
+      <svg class="flowers" viewBox="0 0 100 170" preserveAspectRatio="xMidYMax slice">
+        <rect width="100" height="170" fill="#3f5c3a"/>
+        <g><circle cx="50" cy="130" r="9" fill="#f3d38a"/><circle cx="50" cy="130" r="4" fill="#e8a0bf"/></g>
+        <g><circle cx="25" cy="100" r="6" fill="#b48ee0"/></g>
+        <g><circle cx="78" cy="115" r="7" fill="#e8a0bf"/></g>
+        <g><circle cx="60" cy="80" r="5" fill="#f3d38a"/></g>
+        <g stroke="#2b3e28" stroke-width="2"><line x1="50" y1="130" x2="50" y2="165"/><line x1="25" y1="100" x2="25" y2="155"/><line x1="78" y1="115" x2="78" y2="160"/><line x1="60" y1="80" x2="60" y2="150"/></g>
+      </svg>
+      <div class="veil"></div>
+      <div class="flame-layer"><div class="flame flame-core"></div><div class="flame flame-mid"></div><span class="ember"></span><span class="ember"></span><span class="ember"></span></div>
+    </div>
+
+    <div class="door" data-door="3">
+      <svg class="flowers" viewBox="0 0 100 170" preserveAspectRatio="xMidYMax slice">
+        <rect width="100" height="170" fill="#3f5c3a"/>
+        <g><circle cx="35" cy="135" r="7" fill="#b48ee0"/></g>
+        <g><circle cx="68" cy="125" r="8" fill="#e8a0bf"/><circle cx="68" cy="125" r="3" fill="#f3d38a"/></g>
+        <g><circle cx="50" cy="95" r="6" fill="#f3d38a"/></g>
+        <g><circle cx="20" cy="105" r="5" fill="#e8a0bf"/></g>
+        <g stroke="#2b3e28" stroke-width="2"><line x1="35" y1="135" x2="35" y2="165"/><line x1="68" y1="125" x2="68" y2="160"/><line x1="50" y1="95" x2="50" y2="150"/><line x1="20" y1="105" x2="20" y2="155"/></g>
+      </svg>
+      <div class="veil"></div>
+      <div class="flame-layer"><div class="flame flame-core"></div><div class="flame flame-mid"></div><span class="ember"></span><span class="ember"></span><span class="ember"></span></div>
+    </div>
+  </div>
+
+  <div class="door-label">الأبواب المفتوحة: محارم الله</div>
+  <p class="reveal-text" id="doorText">"وَيْحَكَ، لَا تَفْتَحْهُ؛ فَإِنَّكَ إِنْ تَفْتَحْهُ تَلِجْهُ"</p>
+  <div class="scroll-cue" style="margin-top:6vh;">
+    أتريد أن تعلم من ناداك وحذرك؟ تابع لتعرف
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+  </div>
+</section>
+
+<!-- Section 4: الداعي الثاني من فوق الصراط -->
+<section id="s4">
+  <p class="intro-text">فوق الصراط صوت آخر لا يفارقك أبداً؛ يناديك متماثلاً فوق مسارك تماماً، صوتٌ يتردد من الأعلى وفي داخلك. اضغط عليه لترى من هو حقاً.</p>
+
+  <div class="figure-wrap" id="figureWrap" tabIndex="-1">
+    <div class="figure-burst"></div>
+    <svg class="figure-svg" viewBox="0 0 120 170">
+      <ellipse id="figHead" cx="60" cy="42" rx="22" ry="24" fill="#20242e"/>
+      <path id="figBody" d="M30 150 Q30 90 60 88 Q90 90 90 150 Z" fill="#20242e"/>
+    </svg>
+  </div>
+
+  <div class="figure-label">الدَّاعِي مِنْ فَوْقِ الصِّرَاطِ</div>
+  <p class="reveal-text2" id="figureText">"وَاعِظُ اللَّهِ فِي قَلْبِ كُلِّ مُسْلِمٍ" — كلما هممت بباب، صرخ فيك محذّراً. الأول ينادي من الخارج بصوت ثابت، وهذا ينادي فوق مسارك وفي داخلك في كل لحظة.</p>
+</section>
+
+<!-- Section 5: المعاني + الحديث كاملاً -->
+<section id="s5">
+  <h2>الآن... اجمع الصورة كاملة</h2>
+  <p class="lead">اضغط على كل عنصر لتكتشف بُعداً أعمق من معناه، قبل أن تقرأ الحديث كاملاً في الخاتمة.</p>
+
+  <div class="map-list" id="mapList">
+    <div class="map-item">
+      <div class="row">
+        <span class="term">الصِّرَاط = الإسلام</span>
+        <span class="plus">+</span>
+      </div>
+      <div class="detail">ليس مجرد خط ثابت تحت قدميك، بل منهج حياة كامل تسير فيه من أول أنفاسك إلى آخرها. مستقيم لا اعوجاج فيه، ومن التزمه بلغ الغاية، ومن حاد عنه ضلّ الطريق.</div>
+    </div>
+    <div class="map-item">
+      <div class="row">
+        <span class="term">السُّوران = حدود الله</span>
+        <span class="plus">+</span>
+      </div>
+      <div class="detail">جداران يحفظانك، لا يحاصرانك. تجاوزهما هلاك محقق، والبقاء بينهما أمان تام. الحدود هنا ليست قيداً، بل رحمة ممتدة على طول الطريق.</div>
+    </div>
+    <div class="map-item">
+      <div class="row">
+        <span class="term">الأبواب المفتوحة = محارم الله</span>
+        <span class="plus">+</span>
+      </div>
+      <div class="detail">مفتوحة عمداً، لتختبر إرادتك لا لتجبرك. كل باب ظاهره زهرة جميلة، وخلف الستر نار حقيقية. أنت وحدك من يقرر: أتقترب لتنظر، أم تمضي في طريقك؟</div>
+    </div>
+    <div class="map-item">
+      <div class="row">
+        <span class="term">الداعي على رأس الصراط = كتاب الله</span>
+        <span class="plus">+</span>
+      </div>
+      <div class="detail">صوت لا يكلّ ولا يتغيّر بتغيّر الزمان، ينادي منذ اللحظة الأولى: تعالوا جميعاً ولا تتفرقوا. هو المرجع الذي لا تختلف كلماته مهما بعدت المسافة عنه.</div>
+    </div>
+    <div class="map-item">
+      <div class="row">
+        <span class="term">الداعي من فوق الصراط = واعظ الله في القلب</span>
+        <span class="plus">+</span>
+      </div>
+      <div class="detail">إن كان الأول صوتاً يأتيك من خارجك، فهذا صوتٌ هيمن فوق مسارك وساكنٌ بداخلك لا يغادرك أبداً. كلما اقتربت من باب، صرخ فيك محذّراً. من أنصت له نجا، ومن أسكته تعرّض للخطر.</div>
+    </div>
+  </div>
+
+  <p class="finale-cue" id="finaleCue">بعد أن تأملت كل رمز... هذا هو الحديث كاملاً</p>
+
+  <div class="hadith-box" id="hadithBox">
+    <p>عَنِ النَّوَّاسِ بْنِ سَمْعَانَ الْأَنْصَارِيِّ عَنْ رَسُولِ اللَّهِ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ، قَالَ: "ضَرَبَ اللَّهُ مَثَلًا صِرَاطًا مُسْتَقِيمًا، وَعَلَى جَنَبَتَي الصِّرَاطِ سُورَانِ فِيهِمَا أَبْوَابٌ مُفَتَّحَةٌ، وَعَلَى الْأَبْوَابِ سُتُورٌ مُرْخَاةٌ، وَعَلَى بَابِ الصِّرَاطِ دَاعٍ يَقُولُ: يَا أَيُّهَا النَّاسُ، ادْخُلُوا الصِّرَاطَ جَمِيعًا، وَلَا تَتَعَرَّجُوا، وَدَاعٍ يَدْعُو مِنْ فَوْقِ الصِّرَاطِ، فَإِذَا أَرَادَ يَفْتَحُ شَيْئًا مِنْ تِلْكَ الْأَبْوَابِ قَالَ وَيْحَكَ، لَا تَفْتَحْهُ ؛ فَإِنَّكَ إِنْ تَفْتَحْهُ تَلِجْهُ، وَالصِّرَاطُ الْإِسْلَامُ، وَالسُّورَانِ حُدُودُ اللَّهِ، وَالْأَبْوَابُ الْمُفَتَّحَةُ مَحَارِمُ اللَّهِ، وَذَلِكَ الدَّاعِي عَلَى رَأْسِ الصِّرَاطِ كِتَابُ اللَّهِ، وَالدَّاعِي مِنْ فَوْقِ الصِّرَاطِ وَاعِظُ اللَّهِ فِي قَلْبِ كُلِّ مُسْلِمٍ".</p>
+  </div>
+
+  <div class="credit credit-main">مشروع ملتقى فاستقم</div>
+  <div class="credit">عمل الطالبة: لجين خالد وتر</div>
+  <div class="credit">مسار إشراق - الدفعة الرابعة</div>
+</section>
+
+<script>
+  // ---- صوتان بشريان حقيقيان (تسجيل) لعبارتي الداعيين، بدون موسيقى ----
+  let audioCtx=null, ambient=null, soundOn=false;
+  const soundBtn=document.getElementById('soundToggle');
+  const callerAudio=document.getElementById('callerAudio');
+  const doorAudio=document.getElementById('doorAudio');
+
+  function startAmbient(){
+    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    const master=audioCtx.createGain();
+    master.gain.value=0.06;
+    master.connect(audioCtx.destination);
+
+    const freqs=[73.42,110,146.83];
+    const oscs=freqs.map(f=>{
+      const o=audioCtx.createOscillator();
+      o.type='sine'; o.frequency.value=f;
+      const g=audioCtx.createGain(); g.gain.value=0.55;
+      o.connect(g).connect(master);
+      o.start();
+      return o;
+    });
+    const lfo=audioCtx.createOscillator();
+    lfo.frequency.value=0.05;
+    const lfoGain=audioCtx.createGain();
+    lfoGain.gain.value=0.025;
+    lfo.connect(lfoGain).connect(master.gain);
+    lfo.start();
+
+    const windLen=audioCtx.sampleRate*4;
+    const windBuf=audioCtx.createBuffer(1,windLen,audioCtx.sampleRate);
+    const wd=windBuf.getChannelData(0);
+    for(let i=0;i<windLen;i++){ wd[i]=Math.random()*2-1; }
+    const wind=audioCtx.createBufferSource();
+    wind.buffer=windBuf; wind.loop=true;
+    const windFilter=audioCtx.createBiquadFilter();
+    windFilter.type='lowpass'; windFilter.frequency.value=420;
+    const windGain=audioCtx.createGain(); windGain.gain.value=0.35;
+    wind.connect(windFilter).connect(windGain).connect(master);
+    wind.start();
+
+    ambient={master, oscs, lfo, wind};
+  }
+  function stopAmbient(){
+    if(audioCtx){ audioCtx.close(); audioCtx=null; ambient=null; }
+  }
+  function playCrackle(){
+    if(!audioCtx) return;
+    const len=audioCtx.sampleRate*0.5;
+    const buffer=audioCtx.createBuffer(1,len,audioCtx.sampleRate);
+    const data=buffer.getChannelData(0);
+    for(let i=0;i<len;i++){ data[i]=(Math.random()*2-1)*Math.pow(1-i/len,2); }
+    const noise=audioCtx.createBufferSource(); noise.buffer=buffer;
+    const bp=audioCtx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=1400; bp.Q.value=0.6;
+    const g=audioCtx.createGain(); g.gain.value=0.35;
+    noise.connect(bp).connect(g).connect(audioCtx.destination);
+    noise.start();
+    const o=audioCtx.createOscillator(); o.type='sawtooth';
+    o.frequency.setValueAtTime(90,audioCtx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(40,audioCtx.currentTime+0.6);
+    const og=audioCtx.createGain();
+    og.gain.setValueAtTime(0.18,audioCtx.currentTime);
+    og.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.6);
+    o.connect(og).connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime+0.6);
+  }
+  function playChime(){
+    if(!audioCtx) return;
+    [440,660,880].forEach((f,i)=>{
+      const o=audioCtx.createOscillator(); o.type='sine';
+      o.frequency.value=f;
+      const g=audioCtx.createGain();
+      const t0=audioCtx.currentTime+i*0.12;
+      g.gain.setValueAtTime(0.0001,t0);
+      g.gain.linearRampToValueAtTime(0.14,t0+0.15);
+      g.gain.exponentialRampToValueAtTime(0.001,t0+1.8);
+      o.connect(g).connect(audioCtx.destination);
+      o.start(t0); o.stop(t0+1.8);
+    });
+  }
+  function playHeartbeat(){
+    if(!audioCtx) return;
+    [0,0.32].forEach(delay=>{
+      const t0=audioCtx.currentTime+delay;
+      const o=audioCtx.createOscillator(); o.type='sine';
+      o.frequency.setValueAtTime(70,t0);
+      o.frequency.exponentialRampToValueAtTime(38,t0+0.22);
+      const g=audioCtx.createGain();
+      g.gain.setValueAtTime(0.001,t0);
+      g.gain.linearRampToValueAtTime(0.32,t0+0.03);
+      g.gain.exponentialRampToValueAtTime(0.001,t0+0.28);
+      o.connect(g).connect(audioCtx.destination);
+      o.start(t0); o.stop(t0+0.3);
+    });
+  }
+  // خطى خافتة أثناء التيه في المشهد الأول
+  let footstepTimer=null;
+  function playFootstepThump(){
+    if(!audioCtx) return;
+    const t0=audioCtx.currentTime;
+    const o=audioCtx.createOscillator(); o.type='sine';
+    o.frequency.setValueAtTime(58,t0);
+    o.frequency.exponentialRampToValueAtTime(32,t0+0.16);
+    const g=audioCtx.createGain();
+    g.gain.setValueAtTime(0.001,t0);
+    g.gain.linearRampToValueAtTime(0.1,t0+0.02);
+    g.gain.exponentialRampToValueAtTime(0.001,t0+0.2);
+    o.connect(g).connect(audioCtx.destination);
+    o.start(t0); o.stop(t0+0.22);
+  }
+  function startFootsteps(){
+    if(footstepTimer) return;
+    footstepTimer = setInterval(()=>{ if(soundOn) playFootstepThump(); }, 1600);
+  }
+  function stopFootsteps(){
+    if(footstepTimer){ clearInterval(footstepTimer); footstepTimer=null; }
+  }
+  // نبرة هبوب خافتة تسبق ظهور الداعي من فوق الصراط
+  function playPresenceSwell(){
+    if(!audioCtx) return;
+    const t0=audioCtx.currentTime;
+    const o=audioCtx.createOscillator(); o.type='sine';
+    o.frequency.setValueAtTime(48,t0);
+    o.frequency.linearRampToValueAtTime(65,t0+1.2);
+    o.frequency.linearRampToValueAtTime(0.001,t0+2.4);
+    const g=audioCtx.createGain();
+    g.gain.setValueAtTime(0.001,t0);
+    g.gain.linearRampToValueAtTime(0.16,t0+0.8);
+    g.gain.linearRampToValueAtTime(0.001,t0+2.3);
+    o.connect(g).connect(audioCtx.destination);
+    o.start(t0); o.stop(t0+2.4);
+  }
+  soundBtn.addEventListener('click', ()=>{
+    soundOn=!soundOn;
+    if(soundOn){
+      startAmbient();
+      soundBtn.textContent='🔊 إيقاف';
+      if(document.getElementById('s1').getBoundingClientRect().top < window.innerHeight*0.6) startFootsteps();
+      [callerAudio, doorAudio].forEach(a=>{
+        a.play().then(()=>{ a.pause(); a.currentTime = 0; }).catch(()=>{});
+      });
+    }
+    else {
+      stopAmbient();
+      stopFootsteps();
+      callerAudio.pause(); callerAudio.currentTime = 0;
+      doorAudio.pause(); doorAudio.currentTime = 0;
+      soundBtn.textContent='🔈 الصوت';
+    }
+  });
+
+  const dots = document.querySelectorAll('.progress span');
+  const sections = document.querySelectorAll('section');
+
+  window.addEventListener('scroll', ()=>{
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercent = scrollTop / docHeight;
+    
+    let activeIdx = Math.floor(scrollPercent * dots.length);
+    if(scrollPercent >= 0.95) activeIdx = dots.length - 1;
+
+    dots.forEach((d, i)=>{
+      if(i === activeIdx) d.classList.add('active');
+      else d.classList.remove('active');
+    });
+  });
+
+  // Section 1: خطى خافتة أثناء ظهور مشهد التيه
+  const s1El = document.getElementById('s1');
+  const io1 = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting && soundOn) startFootsteps();
+      else stopFootsteps();
+    });
+  }, {threshold:0.4});
+  io1.observe(s1El);
+
+  // Section 2: orb / quran reveal
+  const sceneWrap = document.getElementById('sceneWrap');
+  const orbHotspot = document.getElementById('orbHotspot');
+  const orbText = document.getElementById('orbText');
+  orbHotspot.addEventListener('click', ()=>{
+    sceneWrap.classList.toggle('revealed');
+    orbText.classList.toggle('show');
+    if(sceneWrap.classList.contains('revealed')) playChime();
+  });
+
+  // صوت الداعي الأول: يُنطق أول مرة يظهر فيها نداؤه على الشاشة
+  let callerSpoken = false;
+  const callerLine1 = document.getElementById('callerLine1');
+  const ioCaller = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting && !callerSpoken && soundOn){
+        callerSpoken = true;
+        callerAudio.currentTime = 0;
+        callerAudio.play().catch(()=>{});
+      }
+    });
+  }, {threshold:0.4});
+  ioCaller.observe(callerLine1);
+
+  // Section 3: doors
+  const doors = document.querySelectorAll('.door');
+  const doorText = document.getElementById('doorText');
+  doors.forEach(door=>{
+    door.addEventListener('click', ()=>{
+      const isOpen = door.classList.contains('opened');
+      doors.forEach(d=>d.classList.remove('opened'));
+      if(!isOpen){
+        door.classList.add('opened');
+        doorText.classList.add('show');
+        playCrackle();
+        doorAudio.currentTime = 0;
+        doorAudio.play().catch(()=>{});
+      } else {
+        doorText.classList.remove('show');
+      }
+    });
+  });
+
+  // Section 4: figure
+  const figureWrap = document.getElementById('figureWrap');
+  const figureText = document.getElementById('figureText');
+  let presencePlayed = false;
+  const ioPresence = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting && !presencePlayed && soundOn){
+        presencePlayed = true;
+        playPresenceSwell();
+      }
+    });
+  }, {threshold:0.5});
+  ioPresence.observe(figureWrap);
+  figureWrap.addEventListener('click', ()=>{
+    figureWrap.classList.toggle('revealed');
+    figureText.classList.toggle('show');
+    if(figureWrap.classList.contains('revealed')) {
+      playChime();
+      playHeartbeat();
+    }
+  });
+
+  // Section 5: accordion + finale reveal
+  const mapItems = document.querySelectorAll('.map-item');
+  mapItems.forEach(item=>{
+    item.querySelector('.row').addEventListener('click', ()=>{
+      item.classList.toggle('open');
+    });
+  });
+
+  const hadithBox = document.getElementById('hadithBox');
+  const io2 = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ hadithBox.classList.add('show'); }
+    });
+  }, {threshold:0.3});
+  io2.observe(hadithBox);
+</script>
+
+</body>
+</html>
